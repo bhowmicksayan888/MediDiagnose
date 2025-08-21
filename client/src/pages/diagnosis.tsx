@@ -57,8 +57,8 @@ export default function DiagnosisPage() {
     defaultValues: {
       primarySymptom: "",
       associatedSymptoms: [],
-      age: undefined,
-      gender: undefined,
+      age: "" as any,
+      gender: "" as any,
     },
   });
 
@@ -296,7 +296,8 @@ export default function DiagnosisPage() {
                                 type="number" 
                                 placeholder="25"
                                 {...field}
-                                onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                                value={field.value || ""}
+                                onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : "")}
                                 data-testid="input-age"
                               />
                             </FormControl>
@@ -310,7 +311,7 @@ export default function DiagnosisPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Gender</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} value={field.value || ""}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-gender">
                                   <SelectValue placeholder="Select" />
