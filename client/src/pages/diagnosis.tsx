@@ -29,7 +29,11 @@ import {
   TriangleAlert,
   BriefcaseMedical,
   UserRound,
-  Heart
+  Heart,
+  Book,
+  FileText,
+  Award,
+  Shield
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -410,11 +414,17 @@ export default function DiagnosisPage() {
                                   <h3 className="font-semibold text-dark-slate text-lg" data-testid={`text-diagnosis-${index}`}>
                                     {diagnosis.condition}
                                   </h3>
-                                  <div className="flex items-center mt-1">
+                                  <div className="flex items-center gap-2 mt-1">
                                     {renderStars(diagnosis.probability)}
-                                    <span className="text-sm text-gray-600 ml-2">
+                                    <span className="text-sm text-gray-600">
                                       {diagnosis.probability >= 80 ? 'High' : diagnosis.probability >= 50 ? 'Medium' : 'Low'} Probability ({diagnosis.probability}%)
                                     </span>
+                                    {diagnosis.evidenceLevel && (
+                                      <Badge variant="outline" className="text-xs">
+                                        <Award className="w-3 h-3 mr-1" />
+                                        Evidence: {diagnosis.evidenceLevel}
+                                      </Badge>
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -422,9 +432,63 @@ export default function DiagnosisPage() {
                                 {diagnosis.urgency.toUpperCase()}
                               </Badge>
                             </div>
+
+                            {/* ICD-10 Code */}
+                            {diagnosis.icd10Code && (
+                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                                <div className="flex items-center text-sm">
+                                  <Shield className="text-medical-blue mr-2 h-4 w-4" />
+                                  <span className="font-medium text-medical-blue">ICD-10:</span>
+                                  <span className="ml-2 font-mono font-semibold">{diagnosis.icd10Code.code}</span>
+                                  <span className="ml-2 text-gray-700">{diagnosis.icd10Code.description}</span>
+                                  <Badge variant="outline" className="ml-2 text-xs">
+                                    {diagnosis.icd10Code.category}
+                                  </Badge>
+                                </div>
+                              </div>
+                            )}
+
                             <p className="text-sm text-gray-700 mb-3" data-testid={`text-explanation-${index}`}>
                               {diagnosis.explanation}
                             </p>
+
+                            {/* Medical References */}
+                            {diagnosis.medicalReferences && diagnosis.medicalReferences.length > 0 && (
+                              <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
+                                <div className="flex items-center text-sm font-medium text-healthcare-green mb-2">
+                                  <Book className="mr-2 h-4 w-4" />
+                                  Medical References
+                                </div>
+                                <div className="space-y-1">
+                                  {diagnosis.medicalReferences.map((ref, refIndex) => (
+                                    <div key={refIndex} className="text-xs text-gray-700">
+                                      <span className="font-medium">{ref.textbook}</span>
+                                      {ref.edition && <span className="text-gray-500"> ({ref.edition} Ed.)</span>}
+                                      <br />
+                                      <span className="text-gray-600">{ref.chapter}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Clinical Guidelines */}
+                            {diagnosis.clinicalGuidelines && diagnosis.clinicalGuidelines.length > 0 && (
+                              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">
+                                <div className="flex items-center text-sm font-medium text-amber-700 mb-2">
+                                  <FileText className="mr-2 h-4 w-4" />
+                                  Clinical Guidelines
+                                </div>
+                                <div className="space-y-1">
+                                  {diagnosis.clinicalGuidelines.map((guideline, guideIndex) => (
+                                    <div key={guideIndex} className="text-xs text-amber-700">
+                                      {guideline}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
                             <div className="space-y-2">
                               {diagnosis.matchingSymptoms.length > 0 && (
                                 <div className="flex items-center text-sm">
