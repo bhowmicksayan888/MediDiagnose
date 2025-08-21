@@ -54,54 +54,13 @@ Guidelines:
 
 Remember: This is for educational purposes only and should not replace professional medical evaluation.`;
 
-    const systemInstruction = `You are a medical AI specialist providing differential diagnosis assistance. 
-Always respond with valid JSON and maintain professional medical standards.
-Respond with JSON in this exact format: 
-{
-  "summary": "Brief analysis summary explaining the approach and key considerations",
-  "results": [
-    {
-      "condition": "Medical condition name",
-      "probability": 85,
-      "explanation": "Clear explanation of why this condition fits the symptoms",
-      "urgency": "urgent|moderate|mild",
-      "matchingSymptoms": ["symptom1", "symptom2"],
-      "recommendations": ["specific recommendation 1", "specific recommendation 2"]
-    }
-  ],
-  "recommendations": ["Overall recommendations for next steps", "General advice"],
-  "analysisTimestamp": "${new Date().toISOString()}"
-}`;
+    const systemInstruction = `You are a medical AI specialist. Always respond with valid JSON only. Be fast and accurate.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-pro",
+      model: "gemini-2.5-flash",
       config: {
         systemInstruction: systemInstruction,
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: "object",
-          properties: {
-            summary: { type: "string" },
-            results: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  condition: { type: "string" },
-                  probability: { type: "number" },
-                  explanation: { type: "string" },
-                  urgency: { type: "string" },
-                  matchingSymptoms: { type: "array", items: { type: "string" } },
-                  recommendations: { type: "array", items: { type: "string" } }
-                },
-                required: ["condition", "probability", "explanation", "urgency", "matchingSymptoms", "recommendations"]
-              }
-            },
-            recommendations: { type: "array", items: { type: "string" } },
-            analysisTimestamp: { type: "string" }
-          },
-          required: ["summary", "results", "recommendations", "analysisTimestamp"]
-        }
+        responseMimeType: "application/json"
       },
       contents: prompt
     });
