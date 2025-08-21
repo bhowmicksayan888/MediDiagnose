@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { diagnosisInputSchema } from "@shared/schema";
-import { generateDifferentialDiagnosis } from "./services/openai";
+import { generateDifferentialDiagnosis } from "./services/gemini";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
