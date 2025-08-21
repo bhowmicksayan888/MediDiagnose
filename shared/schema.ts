@@ -44,6 +44,19 @@ export type InsertDiagnosisRequest = z.infer<typeof insertDiagnosisRequestSchema
 export type DiagnosisRequest = typeof diagnosisRequests.$inferSelect;
 export type DiagnosisInput = z.infer<typeof diagnosisInputSchema>;
 
+export interface MedicalReference {
+  textbook: string;
+  chapter: string;
+  pageRange?: string;
+  edition?: string;
+}
+
+export interface ICD10Code {
+  code: string;
+  description: string;
+  category: string;
+}
+
 export interface DiagnosisResult {
   condition: string;
   probability: number;
@@ -51,6 +64,10 @@ export interface DiagnosisResult {
   urgency: "urgent" | "moderate" | "mild";
   matchingSymptoms: string[];
   recommendations: string[];
+  icd10Code?: ICD10Code;
+  medicalReferences?: MedicalReference[];
+  evidenceLevel?: "A" | "B" | "C" | "Expert Opinion";
+  clinicalGuidelines?: string[];
 }
 
 export interface DiagnosisResponse {
